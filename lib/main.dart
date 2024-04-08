@@ -13,12 +13,26 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: LoginPage(
+         productName: '',
+productPrice: '',
+description: '',
+      ),
     );
   }
 }
 
 class LoginPage extends StatefulWidget {
+  final String productName;
+  final String productPrice;
+  final String description;
+  const LoginPage({
+    Key? key,
+    required this.productName,
+    required this.productPrice,
+    required this.description,
+
+  }) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -36,7 +50,11 @@ class _LoginPageState extends State<LoginPage> {
       if (_selectedUserType == 'Customer') {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CustomerPage()),
+          MaterialPageRoute(builder: (context) => CustomerPage(
+                productName: widget.productName,
+                productPrice: widget.productPrice,
+                description: widget.description,
+          )),
         );
       } else {
         Navigator.push(
@@ -129,7 +147,7 @@ class SignUpPage extends StatelessWidget {
       if (_selectedUserType == 'Customer') {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CustomerPage()),
+          MaterialPageRoute(builder: (context) => CustomerPage(productName: '',productPrice: '',description: '',)),
         );
       } else {
         Navigator.push(
@@ -215,17 +233,29 @@ class SignUpPage extends StatelessWidget {
 }
 
 class CustomerPage extends StatefulWidget {
+  final String productName;
+  final String productPrice;
+  final String description;
+  const CustomerPage({
+    Key? key,
+    required this.productName,
+    required this.productPrice,
+    required this.description,
+
+  }) : super(key: key);
   @override
   _CustomerPageState createState() => _CustomerPageState();
 }
 
 class _CustomerPageState extends State<CustomerPage> {
+  
   List<Product> selectedProducts = [];
 
   @override
   void initState() {
     super.initState();
     // Initialize selected products with dummy data
+    double price = double.parse(widget.productPrice);
     selectedProducts = [
       Product(
         name: 'Headphones',
@@ -331,6 +361,11 @@ class _CustomerPageState extends State<CustomerPage> {
         description:
             'Convenient wireless charging pad for Qi-compatible devices.',
       ),
+      Product(
+        name: widget.productName,
+        price: price,
+        description: widget.description,
+      )
     ];
   }
 
