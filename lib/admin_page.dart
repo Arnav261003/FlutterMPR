@@ -75,15 +75,18 @@ class AdminPage extends StatelessWidget {
                     );
                     customerProducts!.add(newProduct);
                   }
-                  Navigator.push(
-  context,
-  MaterialPageRoute(builder: (context) => LoginPage(
-    productName: nameController.text,
-    productPrice: priceController.text,
-    description: descriptionController.text,
-  )),
-);
-
+                  Future.delayed(Duration(seconds: 2), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(
+                          productName: nameController.text,
+                          productPrice: priceController.text,
+                          description: descriptionController.text,
+                        ),
+                      ),
+                    );
+                  });
                 } else {
                   // Show error message if fields are empty or invalid
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
