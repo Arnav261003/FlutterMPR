@@ -3,6 +3,7 @@ import 'admin_page.dart';
 
 void main() {
   runApp(MyApp());
+  
 }
 
 class MyApp extends StatelessWidget {
@@ -10,14 +11,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Electronic Store',
+      
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: LoginPage(
-         productName: '',
-productPrice: '',
-description: '',
+        productName: '',
+        productPrice: '',
+        description: '',
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -31,7 +34,6 @@ class LoginPage extends StatefulWidget {
     required this.productName,
     required this.productPrice,
     required this.description,
-
   }) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -50,11 +52,12 @@ class _LoginPageState extends State<LoginPage> {
       if (_selectedUserType == 'Customer') {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CustomerPage(
-                productName: widget.productName,
-                productPrice: widget.productPrice,
-                description: widget.description,
-          )),
+          MaterialPageRoute(
+              builder: (context) => CustomerPage(
+                    productName: widget.productName,
+                    productPrice: widget.productPrice,
+                    description: widget.description,
+                  )),
         );
       } else {
         Navigator.push(
@@ -75,13 +78,26 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('TechCentral'), // Updated title
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Title and tagline
+            Text(
+              'Welcome to TechCentral',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'Your one-stop destination for all tech needs',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 24.0),
             DropdownButtonFormField<String>(
               value: _selectedUserType,
               items: ['Customer', 'Admin']
@@ -147,7 +163,12 @@ class SignUpPage extends StatelessWidget {
       if (_selectedUserType == 'Customer') {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CustomerPage(productName: '',productPrice: '',description: '',)),
+          MaterialPageRoute(
+              builder: (context) => CustomerPage(
+                    productName: '',
+                    productPrice: '',
+                    description: '',
+                  )),
         );
       } else {
         Navigator.push(
@@ -171,7 +192,7 @@ class SignUpPage extends StatelessWidget {
 
   bool _isValidPassword(String password) {
     // Password validation: at least one number and one special character
-    return RegExp(r'^(?=.*[0-9])(?=.*[!@#$%^&*])').hasMatch(password);
+    return RegExp(r'^(?=.[0-9])(?=.[!@#$%^&*])').hasMatch(password);
   }
 
   @override
@@ -241,15 +262,15 @@ class CustomerPage extends StatefulWidget {
     required this.productName,
     required this.productPrice,
     required this.description,
-
   }) : super(key: key);
   @override
   _CustomerPageState createState() => _CustomerPageState();
 }
 
 class _CustomerPageState extends State<CustomerPage> {
-  
   List<Product> selectedProducts = [];
+  List<Product> filteredProducts = []; // List to store filtered products
+  TextEditingController searchController = TextEditingController(); // Controller for the search bar
 
   @override
   void initState() {
@@ -367,6 +388,7 @@ class _CustomerPageState extends State<CustomerPage> {
         description: widget.description,
       )
     ];
+    filteredProducts = selectedProducts;
   }
 
   void addToCart(Product product) {
@@ -378,6 +400,20 @@ class _CustomerPageState extends State<CustomerPage> {
   void removeFromCart(Product product) {
     setState(() {
       product.isAddedToCart = false;
+    });
+  }
+
+  void searchProducts(String searchText) {
+    setState(() {
+      if (searchText.isEmpty) {
+        // If search text is empty, show all products
+        filteredProducts = selectedProducts;
+      } else {
+        // Otherwise, filter products based on search text
+        filteredProducts = selectedProducts
+            .where((product) => product.name.toLowerCase().contains(searchText.toLowerCase()))
+            .toList();
+      }
     });
   }
 
@@ -406,27 +442,49 @@ class _CustomerPageState extends State<CustomerPage> {
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: EdgeInsets.all(8.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount:
-              _getGridCount(context), // Adjust grid count based on screen width
-          crossAxisSpacing: 8.0,
-          mainAxisSpacing: 8.0,
-        ),
-        itemCount: selectedProducts.length,
-        itemBuilder: (context, index) {
-          return AnimatedProductCard(
-            // Add animation to product card
-            product: selectedProducts[index],
-            onPressed: () {
-              addToCart(selectedProducts[index]);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Added to cart')),
-              );
-            },
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Search products...',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    // Perform search when search icon is pressed
+                    searchProducts(searchController.text);
+                  },
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: EdgeInsets.all(8.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _getGridCount(context), // Adjust grid count based on screen width
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
+              ),
+              itemCount: filteredProducts.length,
+              itemBuilder: (context, index) {
+                return AnimatedProductCard(
+                  // Add animation to product card
+                  product: filteredProducts[index],
+                  onPressed: () {
+                    addToCart(filteredProducts[index]);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Added to cart')),
+                    );
+                    Future.delayed(Duration(seconds: 1), () {});
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -623,6 +681,9 @@ class CartPage extends StatelessWidget {
     List<Product> cartProducts =
         selectedProducts.where((product) => product.isAddedToCart).toList();
 
+    double totalPrice = cartProducts.fold(
+        0, (prev, product) => prev + product.price); // Calculate total price
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Cart Page'),
@@ -632,6 +693,7 @@ class CartPage extends StatelessWidget {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(cartProducts[index].name),
+            subtitle: Text('\$${cartProducts[index].price.toStringAsFixed(2)}'),
             trailing: IconButton(
               icon: Icon(Icons.remove_circle),
               onPressed: () => onRemove(cartProducts[index]),
@@ -642,18 +704,30 @@ class CartPage extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: ElevatedButton(
-            onPressed: () {
-              // Navigate to Order Summary page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      OrderSummaryPage(selectedProducts: cartProducts),
-                ),
-              );
-            },
-            child: Text('Buy Now'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Total Price: \$${totalPrice.toStringAsFixed(2)}',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 12.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to Order Summary page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          OrderSummaryPage(selectedProducts: cartProducts),
+                    ),
+                  );
+                },
+                child: Text('Buy Now'),
+              ),
+            ],
           ),
         ),
       ),
@@ -686,7 +760,14 @@ class OrderSummaryPage extends StatelessWidget {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Place order logic
+                // Show snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Your order is placed'),
+                  ),
+                );
+                // Return to CustomerPage after a delay
+                Future.delayed(Duration(seconds: 2), () {});
               },
               child: Text('Place Order'),
             ),
