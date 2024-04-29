@@ -3,7 +3,6 @@ import 'admin_page.dart';
 
 void main() {
   runApp(MyApp());
-  
 }
 
 class MyApp extends StatelessWidget {
@@ -11,9 +10,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Electronic Store',
-      
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Color(0xFFB100CD), // Updated appbar color
+        scaffoldBackgroundColor:
+            Color.fromARGB(255, 27, 27, 27), // Background color
       ),
       home: LoginPage(
         productName: '',
@@ -53,11 +53,12 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CustomerPage(
-                    productName: widget.productName,
-                    productPrice: widget.productPrice,
-                    description: widget.description,
-                  )),
+            builder: (context) => CustomerPage(
+              productName: widget.productName,
+              productPrice: widget.productPrice,
+              description: widget.description,
+            ),
+          ),
         );
       } else {
         Navigator.push(
@@ -78,32 +79,98 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('TechCentral'), // Updated title
+        title: Text(
+          'TechCentral',
+          style: TextStyle(
+            color: Colors.white, // Text color of appbar
+            shadows: [Shadow(color: Colors.white, blurRadius: 8)], // Text glow
+          ),
+        ),
+        backgroundColor: Color(0xFFB100CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(7),
+            bottomRight: Radius.circular(7),
+          ),
+        ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title and tagline
+            SizedBox(height: 24.0),
             Text(
               'Welcome to TechCentral',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [Shadow(color: Colors.white, blurRadius: 1)],
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 8.0),
             Text(
               'Your one-stop destination for all tech needs',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                shadows: [Shadow(color: Colors.white, blurRadius: 1)],
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 24.0),
+            TextFormField(
+              controller: _usernameController,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Username',
+                labelStyle:
+                    TextStyle(color: Colors.white), // Placeholder text color
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: _passwordController,
+              style: TextStyle(color: Colors.white),
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                labelStyle:
+                    TextStyle(color: Colors.white), // Placeholder text color
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
             DropdownButtonFormField<String>(
               value: _selectedUserType,
               items: ['Customer', 'Admin']
                   .map((userType) => DropdownMenuItem(
                         value: userType,
-                        child: Text(userType),
+                        child: Text(
+                          userType,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -111,34 +178,127 @@ class _LoginPageState extends State<LoginPage> {
                   _selectedUserType = value!;
                 });
               },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              dropdownColor:
+                  Color(0xFF343434), // Dropdown menu background color
             ),
-            SizedBox(height: 16.0),
-            TextFormField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            SizedBox(height: 16.0),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () => _login(context),
-              child: Text('Login'),
-            ),
-            SizedBox(height: 16.0),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          SignUpPage()), // Navigate to sign-up page
-                );
-              },
-              child: Text('Sign Up'),
+            Container(
+              margin: EdgeInsets.only(top: 24.0), // Add top margin
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.4, // Set width to 40% of the screen width
+                    height: 50.0, // Set height
+                    child: ElevatedButton(
+                      onPressed: () => _login(context),
+                      child: Text('Login'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Color(0xFFB100CD)
+                                  .withOpacity(0.5); // Disabled color
+                            }
+                            return Color(0xFFB100CD); // Use the standard color
+                          },
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        elevation: MaterialStateProperty.all<double>(
+                            5.0), // Elevation of the button
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 24.0), // Padding of the button
+                        ),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                          TextStyle(color: Colors.white), // Text color
+                        ),
+                        tapTargetSize: MaterialTapTargetSize
+                            .shrinkWrap, // Reduce tap target size
+                        animationDuration:
+                            Duration(milliseconds: 200), // Animation duration
+                        shadowColor: MaterialStateProperty.all<Color>(
+                          Colors.black.withOpacity(0.2), // Shadow color
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white, // Text color
+                        ),
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return Colors.white
+                                  .withOpacity(0.2); // Hover color
+                            }
+                            return Color(
+                                0xFFB100CD); // Defer to the widget's default.
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16.0), // Add space between the buttons
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.4, // Set width to 40% of the screen width
+                    height: 50.0, // Set height
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignUpPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: Color(0xFFB100CD), // Sign Up button color
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromARGB(255, 27, 27, 27)),
+                        side: MaterialStateProperty.all<BorderSide>(
+                          BorderSide(
+                              color: Color(0xFFB100CD),
+                              width: 2), // Border color
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 24.0), // Padding of the button
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -164,11 +324,12 @@ class SignUpPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CustomerPage(
-                    productName: '',
-                    productPrice: '',
-                    description: '',
-                  )),
+            builder: (context) => CustomerPage(
+              productName: '',
+              productPrice: '',
+              description: '',
+            ),
+          ),
         );
       } else {
         Navigator.push(
@@ -187,53 +348,129 @@ class SignUpPage extends StatelessWidget {
 
   bool _isValidEmail(String email) {
     // Basic email validation
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+    return true;
   }
 
   bool _isValidPassword(String password) {
     // Password validation: at least one number and one special character
-    return RegExp(r'^(?=.[0-9])(?=.[!@#$%^&*])').hasMatch(password);
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        title: Text(
+          'Sign Up',
+          style: TextStyle(
+            color: Colors.white, // Text color of appbar
+            shadows: [Shadow(color: Colors.white, blurRadius: 8)], // Text glow
+          ),
+        ),
+        backgroundColor: Color(0xFFB100CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(7),
+            bottomRight: Radius.circular(7),
+          ),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 16.0),
             DropdownButtonFormField<String>(
               value: _selectedUserType,
               items: ['Customer', 'Admin']
                   .map((userType) => DropdownMenuItem(
                         value: userType,
-                        child: Text(userType),
+                        child: Text(
+                          userType,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ))
                   .toList(),
               onChanged: (value) {
                 _selectedUserType = value!;
               },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              dropdownColor:
+                  Color(0xFF343434), // Dropdown menu background color
             ),
             SizedBox(height: 16.0),
             TextFormField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Username',
+                labelStyle:
+                    TextStyle(color: Colors.white), // Placeholder text color
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none, // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
             SizedBox(height: 16.0),
             TextFormField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                labelStyle:
+                    TextStyle(color: Colors.white), // Placeholder text color
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none, // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
             SizedBox(height: 16.0),
             TextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(labelText: 'Email'),
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Email',
+                labelStyle:
+                    TextStyle(color: Colors.white), // Placeholder text color
+                filled: true,
+                fillColor: Color(0xFF343434),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none, // Border color
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               validator: (value) {
                 if (!_isValidEmail(value!)) {
                   return 'Please enter a valid email';
@@ -245,6 +482,43 @@ class SignUpPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _signUp(context),
               child: Text('Sign Up'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color(0xFFB100CD)), // Button color
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                elevation: MaterialStateProperty.all<double>(
+                    5.0), // Elevation of the button
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  EdgeInsets.symmetric(
+                      vertical: 20.0,
+                      horizontal: 24.0), // Increased vertical padding
+                ),
+                textStyle: MaterialStateProperty.all<TextStyle>(
+                  TextStyle(color: Colors.white), // Text color
+                ),
+                tapTargetSize:
+                    MaterialTapTargetSize.shrinkWrap, // Reduce tap target size
+                animationDuration:
+                    Duration(milliseconds: 200), // Animation duration
+                shadowColor: MaterialStateProperty.all<Color>(
+                  Colors.black.withOpacity(0.2), // Shadow color
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Colors.white, // Text color
+                ),
+                overlayColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.hovered)) {
+                      return Colors.white.withOpacity(0.2); // Hover color
+                    }
+                    return Color(0xFFB100CD); // Defer to the widget's default.
+                  },
+                ),
+              ),
             ),
           ],
         ),
@@ -270,7 +544,8 @@ class CustomerPage extends StatefulWidget {
 class _CustomerPageState extends State<CustomerPage> {
   List<Product> selectedProducts = [];
   List<Product> filteredProducts = []; // List to store filtered products
-  TextEditingController searchController = TextEditingController(); // Controller for the search bar
+  TextEditingController searchController =
+      TextEditingController(); // Controller for the search bar
 
   @override
   void initState() {
@@ -280,105 +555,105 @@ class _CustomerPageState extends State<CustomerPage> {
     selectedProducts = [
       Product(
         name: 'Headphones',
-        price: 23,
+        price: 2300,
         description: 'High-quality headphones for immersive audio experience.',
       ),
       Product(
         name: 'Android Smartphone',
-        price: 179,
+        price: 17900,
         description:
             'Powerful smartphone with advanced features and sleek design.',
       ),
       Product(
         name: 'Phone case',
-        price: 13,
+        price: 1300,
         description: 'Protective case with stylish design for your smartphone.',
       ),
       Product(
         name: 'Adapter',
-        price: 20,
+        price: 2000,
         description: 'Versatile adapter for connecting various devices.',
       ),
       Product(
         name: 'Mouse',
-        price: 39,
+        price: 3900,
         description: 'Ergonomic mouse for precise and comfortable navigation.',
       ),
       Product(
         name: 'Gaming keyboard',
-        price: 56,
+        price: 5600,
         description: 'Mechanical keyboard with customizable RGB lighting.',
       ),
       Product(
         name: 'Laptop Cover',
-        price: 17,
+        price: 1700,
         description: 'Durable cover to keep your laptop safe during transport.',
       ),
       Product(
         name: 'Fitness Band',
-        price: 88,
+        price: 8800,
         description:
             'Track your fitness goals with this stylish and reliable fitness band.',
       ),
       Product(
         name: 'Charger',
-        price: 29,
+        price: 2900,
         description: 'Fast charger for quickly powering up your devices.',
       ),
       Product(
         name: 'Wireless Earbuds',
-        price: 45,
+        price: 4500,
         description:
             'True wireless earbuds with crystal clear sound and comfortable fit.',
       ),
       Product(
         name: 'Smartwatch',
-        price: 99,
+        price: 9900,
         description:
             'Stay connected and organized with this feature-rich smartwatch.',
       ),
       Product(
         name: 'Bluetooth Speaker',
-        price: 65,
+        price: 6500,
         description: 'Portable speaker for enjoying music anywhere you go.',
       ),
       Product(
         name: 'USB-C Cable',
-        price: 10,
+        price: 1000,
         description:
             'High-speed USB-C cable for fast data transfer and charging.',
       ),
       Product(
         name: 'External Hard Drive',
-        price: 79,
+        price: 7900,
         description:
             'Expand your storage capacity with this reliable external hard drive.',
       ),
       Product(
         name: 'Wireless Mouse',
-        price: 25,
+        price: 2500,
         description: 'Wireless mouse for enhanced productivity and comfort.',
       ),
       Product(
         name: 'Portable Power Bank',
-        price: 30,
+        price: 3000,
         description: 'Compact power bank for charging your devices on the go.',
       ),
       Product(
         name: 'Smart Light Bulbs',
-        price: 15,
+        price: 1500,
         description:
             'Energy-efficient smart bulbs for customizable lighting control.',
       ),
       Product(
         name: 'Travel Backpack',
-        price: 50,
+        price: 5000,
         description:
             'Durable backpack designed for travel and outdoor adventures.',
       ),
       Product(
         name: 'Wireless Charging Pad',
-        price: 20,
+        price: 2000,
         description:
             'Convenient wireless charging pad for Qi-compatible devices.',
       ),
@@ -411,7 +686,8 @@ class _CustomerPageState extends State<CustomerPage> {
       } else {
         // Otherwise, filter products based on search text
         filteredProducts = selectedProducts
-            .where((product) => product.name.toLowerCase().contains(searchText.toLowerCase()))
+            .where((product) =>
+                product.name.toLowerCase().contains(searchText.toLowerCase()))
             .toList();
       }
     });
@@ -421,7 +697,20 @@ class _CustomerPageState extends State<CustomerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Electronics'),
+        title: Text(
+          'Products',
+          style: TextStyle(
+            color: Colors.white, // Text color of appbar
+            shadows: [Shadow(color: Colors.white, blurRadius: 8)], // Text glow
+          ),
+        ),
+        backgroundColor: Color(0xFFB100CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(7),
+            bottomRight: Radius.circular(7),
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -450,21 +739,29 @@ class _CustomerPageState extends State<CustomerPage> {
               controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Search products...',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    // Perform search when search icon is pressed
-                    searchProducts(searchController.text);
-                  },
+                hintStyle: TextStyle(color: Colors.white), // Hint text color
+                prefixIcon:
+                    Icon(Icons.search, color: Color(0xFFB100CD)), // Search icon
+
+                filled: true,
+                fillColor: Color(0xFF343434), // Background color
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none, // Remove border
                 ),
               ),
+              style: TextStyle(color: Colors.white), // Text color
+              onChanged: (value) {
+                searchProducts(value); // Perform search as the text changes
+              },
             ),
           ),
           Expanded(
             child: GridView.builder(
               padding: EdgeInsets.all(8.0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: _getGridCount(context), // Adjust grid count based on screen width
+                crossAxisCount: _getGridCount(
+                    context), // Adjust grid count based on screen width
                 crossAxisSpacing: 8.0,
                 mainAxisSpacing: 8.0,
               ),
@@ -532,38 +829,46 @@ class _AnimatedProductCardState extends State<AnimatedProductCard>
       opacity: _animation,
       child: Card(
         elevation: 4.0,
+        color: Color.fromARGB(128, 239, 196, 246), // Set background color
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         child: InkWell(
           onTap: widget.onPressed,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.product.name,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+          child: Center(
+            // Center the content vertically and horizontally
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize:
+                    MainAxisSize.min, // Ensure the column takes minimum space
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, // Center horizontally
+                children: [
+                  Text(
+                    widget.product.name,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center, // Center text horizontally
                   ),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'Price: \$${widget.product.price}',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Price: \Rs.${widget.product.price}',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                    textAlign: TextAlign.center, // Center text horizontally
                   ),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  ' ${widget.product.description}',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
+                  SizedBox(height: 8.0),
+                  Text(
+                    widget.product.description,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                    textAlign: TextAlign.center, // Center text horizontally
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -605,43 +910,43 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4.0,
+      color: Color.fromARGB(128, 239, 196, 246), // Set background color
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       child: InkWell(
         onTap: onPressed,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               height: 120.0,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
-                // Placeholder image
-                color: Colors.grey[300],
+                color: Colors.grey[300], // Placeholder image color
               ),
               child: Center(
                 child: Text(
                   product.name,
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'Price: \$${product.price.toStringAsFixed(2)}',
                     style: TextStyle(fontSize: 14.0),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 4.0),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.yellow),
-                      SizedBox(width: 4.0),
-                      Text('Description: ${product.description}'),
-                    ],
+                  Text(
+                    'Description: ${product.description}',
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -669,34 +974,72 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   final List<Product> selectedProducts;
   final Function(Product) onRemove;
 
   CartPage({required this.selectedProducts, required this.onRemove});
 
   @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  late List<Product> cartProducts;
+  late double totalPrice;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the list of cart products and total price
+    cartProducts = widget.selectedProducts
+        .where((product) => product.isAddedToCart)
+        .toList();
+    totalPrice = cartProducts.fold(0, (prev, product) => prev + product.price);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Filter out products that have not been added to the cart
-    List<Product> cartProducts =
-        selectedProducts.where((product) => product.isAddedToCart).toList();
-
-    double totalPrice = cartProducts.fold(
-        0, (prev, product) => prev + product.price); // Calculate total price
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart Page'),
+        title: Text(
+          'Cart Page',
+          style: TextStyle(
+            color: Colors.white, // Text color of appbar
+            shadows: [Shadow(color: Colors.white, blurRadius: 8)], // Text glow
+          ),
+        ),
+        backgroundColor: Color(0xFFB100CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(7),
+            bottomRight: Radius.circular(7),
+          ),
+        ),
       ),
       body: ListView.builder(
         itemCount: cartProducts.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(cartProducts[index].name),
-            subtitle: Text('\$${cartProducts[index].price.toStringAsFixed(2)}'),
+            title: Text(cartProducts[index].name,
+                style: TextStyle(color: Colors.white)),
+            subtitle: Text('\Rs.${cartProducts[index].price.toStringAsFixed(2)}',
+                style: TextStyle(color: Colors.white)),
             trailing: IconButton(
-              icon: Icon(Icons.remove_circle),
-              onPressed: () => onRemove(cartProducts[index]),
+              icon: Icon(Icons.remove_circle,
+                  color: Color.fromARGB(255, 255, 255, 255)),
+              onPressed: () {
+                // Remove the product from the list
+                widget.onRemove(cartProducts[index]);
+                // Update UI with the new list and total price
+                setState(() {
+                  // Filter out the removed product
+                  cartProducts.removeAt(index);
+                  // Recalculate the total price
+                  totalPrice = cartProducts.fold(
+                      0, (prev, product) => prev + product.price);
+                });
+              },
             ),
           );
         },
@@ -709,7 +1052,7 @@ class CartPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Total Price: \$${totalPrice.toStringAsFixed(2)}',
+                'Total Price: \Rs.${totalPrice.toStringAsFixed(2)}',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -725,6 +1068,9 @@ class CartPage extends StatelessWidget {
                     ),
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFFB100CD), // Background color
+                ),
                 child: Text('Buy Now'),
               ),
             ],
@@ -747,17 +1093,106 @@ class OrderSummaryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Summary'),
+        title: Text(
+          'Order Summary',
+          style: TextStyle(
+            color: Colors.white, // Text color of appbar
+            shadows: [Shadow(color: Colors.white, blurRadius: 8)], // Text glow
+          ),
+        ),
+        backgroundColor: Color(0xFFB100CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(7),
+            bottomRight: Radius.circular(7),
+          ),
+        ),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Total Price: \$${totalPrice.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              'Purchase Details',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Text color
+              ),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 20.0),
+            Table(
+              border: TableBorder.all(color: Colors.white), // Table border color
+              columnWidths: {
+                0: FlexColumnWidth(3),
+                1: FlexColumnWidth(2),
+              },
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(color: Color(0xFFB100CD)), // Header row color
+                  children: [
+                    TableCell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Product Name',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // Text color
+                          ),
+                        ),
+                      ),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Price (per unit)',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // Text color
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                for (Product product in selectedProducts)
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            product.name,
+                            style: TextStyle(color: Colors.white), // Text color
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '\Rs.${product.price.toStringAsFixed(2)}',
+                            style: TextStyle(color: Colors.white), // Text color
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            SizedBox(height: 20.0),
+            Text(
+              'Total Price: \Rs.${totalPrice.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Text color
+              ),
+            ),
+            SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
                 // Show snackbar
@@ -766,10 +1201,23 @@ class OrderSummaryPage extends StatelessWidget {
                     content: Text('Your order is placed'),
                   ),
                 );
-                // Return to CustomerPage after a delay
-                Future.delayed(Duration(seconds: 2), () {});
+                // Return to previous page
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  settings: RouteSettings(name: '/customer'), // Set the route name here
+                  builder: (context) => CustomerPage(
+                    productName: ' ',
+                    productPrice: '0',
+                    description: ' ',
+                  ),
+                ),
+              );
               },
-              child: Text('Place Order'),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFFB100CD), // Background color
+              ),
+              child: Text('Place order'),
             ),
           ],
         ),
